@@ -1,8 +1,8 @@
 #!/bin/bash
 
-VELVETG="$HOME/src.HTseq/velvet/1.2.03/velvetg-101"
-VELVETH="$HOME/src.HTseq/velvet/1.2.03/velveth-101"
-OASES="$HOME/src.HTseq/oases/0.2.06/oases-101"
+OASES="$HOME/git/NuevoTx/denovo/oases-101"
+VELVETH="$HOME/git/NuevoTx/denovo/velveth-101"
+VELVETG="$HOME/git/NuevoTx/denovo/velvetg-101"
 
 FA_m="/path/to/foobar.mult_fasta"
 FA_s=${FA_m/mult_fasta/single_fasta}
