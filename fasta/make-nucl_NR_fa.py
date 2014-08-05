@@ -25,8 +25,8 @@ for tmp_h in seq_list.keys():
 
 count_unique = 0 
 count_multi = 0
-filename_base = filename_fa.replace('.fa','')
-filename_base = filename_base.replace('.sorted_fa','')
+
+filename_base = re.sub(r'.[A-z]*fa[sta]','',filename_fa)
 
 rc = {'A':'T','T':'A','G':'C','C':'G','N':'N'}
 def revcomp(tmp_seq):
@@ -34,8 +34,8 @@ def revcomp(tmp_seq):
     return ''.join(rc[x] for x in re.sub(r'[^ATGC]','N',tmp_seq)[::-1])
 
 exc_list = dict()
-f_nr = open('%s.NR_fa'%filename_base,'w')
-f_nr_log = open('%s.NR_log'%filename_base,'w')
+f_nr = open('%s_NR.fa'%filename_base,'w')
+f_nr_log = open('%s_NR.log'%filename_base,'w')
 for tmp_seq in seq_map.keys():
     tmp_rc_seq = revcomp(tmp_seq)
     tmp_h_list = seq_map[tmp_seq]
