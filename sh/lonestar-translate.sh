@@ -11,8 +11,8 @@
 #$ -P hpc
 
 set -x
-#$ -N tN.LF01
-TN="$HOME/git/NuevoTx/fasta/translate-all-noMstart.py"
+#$ -N p6. 
+TN="$HOME/git/NuevoTx/fasta/translate-tx2prot6"
 
 for FA in $(ls *.fa)
 do
