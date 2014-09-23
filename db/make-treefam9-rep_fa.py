@@ -46,7 +46,9 @@ f_sp.close()
 
 tf_id = ''
 tf2members = dict()
-f_tf9 = gzip.open(filename_tf9,'rb')
+f_tf9 = open(filename_tf9,'r')
+if( filename_tf9.endswith('.gz') ):
+    f_tf9 = gzip.open(filename_tf9,'rb')
 for line in f_tf9:
     if( line.startswith('TF') and len(line) < 16 ):
         tf_id = line.strip()
