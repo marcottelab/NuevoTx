@@ -22,7 +22,7 @@ seqlen = dict()
 f_fa = open(filename_fa,'r')
 for line in f_fa:
     if( line.startswith('>') ):
-        seq_h = line.strip().lstrip('>')
+        seq_h = line.strip().lstrip('>').split()[0]
         seq_list[seq_h] = []
         seqlen[seq_h] = 0
     else:
