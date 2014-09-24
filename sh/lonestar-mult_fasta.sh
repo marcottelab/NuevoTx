@@ -11,7 +11,7 @@
 #$ -P hpc
 
 set -x
-#$ -N mf.Op
+#$ -N mf.
 
 FQ2MF="$HOME/git/NuevoTx/fastq/fastq-to-mult_fasta.py"
 for FQ in $(ls *.fastq)
