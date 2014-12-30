@@ -26,7 +26,7 @@ for tmp_h in seq_list.keys():
 count_unique = 0 
 count_multi = 0
 
-filename_base = re.sub(r'.[A-z]*fa[sta]','',filename_fa)
+filename_base = re.sub(r'.[A-z]*fa[sta]*','',filename_fa)
 
 rc = {'A':'T','T':'A','G':'C','C':'G','N':'N'}
 def revcomp(tmp_seq):
