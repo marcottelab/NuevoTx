@@ -1,0 +1,15 @@
+HUMAN	Homo_sapiens	9606	core	Ensembl	release 70
+MOUSE	Mus_musculus	10090	core	Ensembl	release 70
+CHICK	Gallus_gallus	9031	core	Ensembl	release 70
+XENTR	Xenopus_tropicalis	8364	core	Ensembl	release 70
+DANRE	Danio_rerio	7955	periphery	Ensembl	release 70
+ORYLA	Oryzias_latipes	8090	periphery	Ensembl	release 70
+ANOCA	Anolis_carolinensis	28377	periphery	Ensembl	release 70
+DROME	Drosophila_melanogaster	7227	core	Ensembl	release 70
+CAEEL	Caenorhabditis_elegans	6239	core	Ensembl	release 70
+ARATH	Arabidopsis_thaliana	3702	core	Ensembl Plants	release 17
+CHLRE	Chlamydomonas_reinhardtii	3055	core	Ensembl Plants	release 17
+SELML	Selaginella_moellendorffii	88036	core	Ensembl Plants	release 17
+ZEAMA	Zea_mays	4577	core	Ensembl Plants	release 17
+ORYSA	Oryza_sativa_Japonica	39947	core	Ensembl Plants	release 17
+LATCH	Latimeria_chalumnae	7897	core	Ensembl	release 70
