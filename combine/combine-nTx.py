@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import os
 import sys
 import gzip
@@ -9,11 +9,11 @@ filename_out = '%s.combined_nTx.fa'%(prefix)
 
 seq_list = dict()
 for filename in os.listdir('.'):
-    if( not filename.startswith(prefix) ):
+    if not filename.startswith(prefix):
         continue
-    if( not filename.endswith('.nTx.fa') ):
+    if not filename.endswith('.nTx.fa'):
         continue
-    if( filename == filename_out ):
+    if filename == filename_out:
         continue
 
     sample_name = filename.replace('.nTx.fa','')
@@ -39,7 +39,7 @@ f_out = open(filename_out,'w')
 for tmp_h in seq_list.keys():
     count_total += 1
     tmp_seq = ''.join(seq_list[tmp_h])
-    if( not multi_seq.has_key(tmp_seq) ):
+    if not tmp_seq in multi_seq:
         multi_seq[tmp_seq] = 0
     multi_seq[tmp_seq] += 1
     f_out.write('%s\n%s\n'%(tmp_h,tmp_seq))

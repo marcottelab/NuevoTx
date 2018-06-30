@@ -1,15 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import os
 import sys
 import re
 
 filename_fa = sys.argv[1]
+filename_base = re.sub(r'.[A-z]*fa[sta]*','',filename_fa)
 
 seq_list = dict()
 seq_h = ''
+
 f_seq = open(filename_fa,'r')
 for line in f_seq:
-    if( line.startswith('>') ):
+    if line.startswith('>'):
         seq_h = line.strip().lstrip('>')
         seq_list[seq_h] = []
     else:
@@ -19,14 +21,12 @@ f_seq.close()
 seq_map = dict()
 for tmp_h in seq_list.keys():
     tmp_seq = ''.join(seq_list[tmp_h])
-    if( not seq_map.has_key(tmp_seq) ):
+    if not tmp_seq in  seq_map:
         seq_map[tmp_seq] = []
     seq_map[tmp_seq].append( tmp_h )
 
 count_unique = 0 
 count_multi = 0
-
-filename_base = re.sub(r'.[A-z]*fa[sta]*','',filename_fa)
 
 rc = {'A':'T','T':'A','G':'C','C':'G','N':'N'}
 def revcomp(tmp_seq):
@@ -39,20 +39,21 @@ f_nr_log = open('%s_NR.log'%filename_base,'w')
 for tmp_seq in seq_map.keys():
     tmp_rc_seq = revcomp(tmp_seq)
     tmp_h_list = seq_map[tmp_seq]
-    if( seq_map.has_key(tmp_rc_seq) ):
+    if tmp_rc_seq in seq_map:
         tmp_h_list += seq_map[tmp_rc_seq]
         exc_list[tmp_rc_seq] = 1
     
-    if( exc_list.has_key(tmp_seq) ):
+    if tmp_seq in exc_list:
         continue
 
-    tmp_h = tmp_h_list[0]
+    tmp_h = sorted(tmp_h_list)[0]
     f_nr.write('>%s\n%s\n'%(tmp_h,tmp_seq))
-    if( len(tmp_h_list) > 1 ):
+    if len(tmp_h_list) > 1:
         f_nr_log.write('%s <- %s\n'%(tmp_h,';;'.join(tmp_h_list)))
         count_multi += 1
     else:
         count_unique += 1
+
 f_nr_log.write('#total seq: %d\n'%len(seq_list))
 f_nr_log.write('#total nr seq: %d\n'%len(seq_map))
 f_nr_log.write('#unique seq: %d, redundant seq:%d\n'%(count_unique, count_multi))

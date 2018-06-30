@@ -16,10 +16,10 @@ if( filename_fq.endswith('.gz') ):
 for line in f_fq:
     if( line.startswith('@') ):
         h = line.strip().split()[0]
-        nseq = f_fq.next().strip()
-        qh = f_fq.next()
-        qseq = f_fq.next().strip()
-        if( not seq_count.has_key(nseq) ):
+        nseq = next(f_fq).strip()
+        qh = next(f_fq)
+        qseq = next(f_fq).strip()
+        if( not nseq in seq_count ):
             seq_count[nseq] = 0
         seq_count[nseq] += 1
 f_fq.close()
