@@ -1,9 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os 
 import sys
 
 filename_best = sys.argv[1]
-
 filename_part = filename_best.replace('_best','')+'_part'
 
 max_gap_opens = 0
@@ -12,8 +11,9 @@ min_align_ratio_pct = 99
 f_part = open(filename_part,'w')
 f_best = open(filename_best,'r')
 for line in f_best:
-    if( line.startswith('#') ):
+    if line.startswith('#'):
         continue
+
     tokens = line.strip().split("\t")
     q_id = tokens[0]
     q_len = int(tokens[1])
@@ -25,7 +25,8 @@ for line in f_best:
     bitscore = float(tokens[7])
     
     align_ratio = (align_len - mismatches)*100.0 / q_len
-    if( gap_opens <= max_gap_opens and align_ratio >= min_align_ratio_pct and q_len <= t_len ):
+    if gap_opens <= max_gap_opens and align_ratio >= min_align_ratio_pct and q_len <= t_len:
         f_part.write("%s\n"%(line.strip()))
+
 f_best.close()
 f_part.close()
