@@ -69,6 +69,6 @@ for line in f_targets:
     # print(q_id, pf_count, sp_count, t_count)
 
     sys.stderr.write('Write %s\n' % q_id)
-    f_out = open( os.path.join(dirname_msa, '%s.fa' % q_id), 'w')
+    f_out = open( os.path.join(dirname_msa, '%s.msa_in.fa' % q_id), 'w')
     f_out.write(">%s\n%s\n" % (q_id, ''.join(qseq_list[q_id])))
 f_targets.close()
