@@ -11,7 +11,7 @@ sys.stderr.write('%s -> %s.mult_fasta\n'%(filename_fq,filename_base))
 seq_count = dict()
 f_fq = open(filename_fq,'r')
 if( filename_fq.endswith('.gz') ):
-    f_fq = gzip.open(filename_fq,'rb')
+    f_fq = gzip.open(filename_fq,'rt')
 
 for line in f_fq:
     if( line.startswith('@') ):

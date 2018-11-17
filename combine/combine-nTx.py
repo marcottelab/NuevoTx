@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 import os
 import sys
 import gzip
@@ -11,7 +11,7 @@ seq_list = dict()
 for filename in os.listdir('.'):
     if not filename.startswith(prefix):
         continue
-    if not filename.endswith('.nTx.fa'):
+    if not filename.endswith('.nTx.fa.gz'):
         continue
     if filename == filename_out:
         continue

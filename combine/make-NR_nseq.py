@@ -47,7 +47,8 @@ for tmp_seq in seq_map.keys():
         continue
 
     tmp_h = sorted(tmp_h_list)[0]
-    f_nr.write('>%s\n%s\n'%(tmp_h,tmp_seq))
+    tmp_count = len(tmp_h_list)
+    f_nr.write('>%s %d\n%s\n'%(tmp_h,tmp_count,tmp_seq))
     if len(tmp_h_list) > 1:
         f_nr_log.write('%s <- %s\n'%(tmp_h,';;'.join(tmp_h_list)))
         count_multi += 1
