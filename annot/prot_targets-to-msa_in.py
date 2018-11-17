@@ -7,10 +7,11 @@ max_t_list = 20
 max_t_per_species = 5
 
 filename_MODtree = \
-    '/home/taejoon/data/pub/MODtree/201806/MODtree.treefam9.201806.fa.gz'
+    '/home/taejoon_kwon/git/NuevoTx/MODtree/MODtree.treefam9.201806.fa.gz'
 
 filename_prot_targets = sys.argv[1]
 filename_prot_fa = filename_prot_targets.replace('.prot_targets', '.prot.fa')
+data_name = filename_prot_targets.split('.')[0]
 
 
 def open_file(tmp_filename):
@@ -41,10 +42,11 @@ for line in f_prot_fa:
         qseq_list[seq_h] += line.strip()
 f_prot_fa.close()
 
-dirname_msa = './msa'
+dirname_msa = './msa.%s' % data_name
 if not os.access(dirname_msa, os.W_OK):
-    os.mkdir(dirname_msa, mode=755)
+    os.mkdir(dirname_msa, mode=0o755)
 
+targets2query = dict()
 f_targets = open_file(filename_prot_targets)
 for line in f_targets:
     tokens = line.strip().split("\t")
@@ -59,16 +61,33 @@ for line in f_targets:
         if tmp_sp_id not in tmp_t_list:
             tmp_t_list[tmp_sp_id] = []
         if len(tmp_t_list[tmp_sp_id]) < max_t_per_species:
-            tmp_t_list[tmp_sp_id].append(t_id)
+            tmp_t_list[tmp_sp_id].append(t_id.split('=')[0])
 
-    # pf_list = list(set([t_id.split('|')[0] for t_id in t_list]))
-    # sp_list = list(set([t_id.split('|')[1] for t_id in t_list]))
-    # t_count = len(t_list)
-    # pf_count = len(pf_list)
-    # sp_count = len(sp_list)
-    # print(q_id, pf_count, sp_count, t_count)
+    tmp_target_list = []
+    for tmp_sp in tmp_t_list.keys():
+        for tmp_t in tmp_t_list[tmp_sp]:
+            tmp_target_list.append(tmp_t)
 
-    sys.stderr.write('Write %s\n' % q_id)
-    f_out = open( os.path.join(dirname_msa, '%s.msa_in.fa' % q_id), 'w')
-    f_out.write(">%s\n%s\n" % (q_id, ''.join(qseq_list[q_id])))
+    tmp_target_str = ';'.join(sorted(tmp_target_list))
+    if not tmp_target_str in targets2query:
+        targets2query[tmp_target_str] = dict()
+    targets2query[tmp_target_str][q_id] = best_bits
 f_targets.close()
+
+for tmp_t_str in targets2query.keys():
+    count_q = 0
+    tmp_t2q = targets2query[tmp_t_str]
+
+    tmp_q_list = sorted(tmp_t2q.keys(), key=tmp_t2q.get, reverse=True)
+    sys.stderr.write('Write %s\n' % tmp_q_list[0])
+    f_out = open( os.path.join(dirname_msa, '%s.msa_in.fa' % tmp_q_list[0]), 'w')
+    for tmp_q in tmp_q_list:
+        count_q += 1
+        f_out.write(">%s\n%s\n" % (tmp_q, qseq_list[tmp_q]))
+        if count_q > 3:
+            sys.stderr.write("Skipped: %s (%s\n" % (tmp_q, tmp_t_str.split(';')[1]))
+
+    for tmp_t in tmp_t_str.split(';'):
+        f_out.write(">%s\n%s\n" % (tmp_t, refseq_list[tmp_t]))
+    f_out.close()
+
