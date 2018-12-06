@@ -2,9 +2,10 @@
 
 NUM_THREADS=4
 
-MKDB="$HOME/git/NuevoTx/blast/makeblastdb"
-BLASTN="$HOME/git/NuevoTx/blast/blastn -task megablast -evalue 1e-4 -dust yes -max_target_seqs 10"
-NRSEQ="$HOME/git/NuevoTx/combine/make-NR_nseq.py"
+CUR_DIR=$(dirname $0)"/best_tbl-to-best_bitscore.py"
+MKDB=$CUR_DIR"/makeblastdb"
+BLASTN=$CUR_DIR"/blastn -task megablast -evalue 1e-4 -dust yes -max_target_seqs 10"
+NRSEQ=$CUR_DIR"../combine/make-NR_nseq.py"
 
 
 for FA in $(ls *.combined_nTx.fa)
