@@ -1,5 +1,6 @@
 #!/bin/bash
-BEST="$HOME/git/HTseq-toolbox/align/blast_tbl-to-best_bitscore.py"
+
+BEST=$(dirname $0)"/best_tbl-to-best_bitscore.py"
 
 for TBL in $(ls | egrep '_tbl(.gz)*$')
 do
