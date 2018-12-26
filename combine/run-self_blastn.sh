@@ -2,11 +2,10 @@
 
 NUM_THREADS=4
 
-CUR_DIR=$(dirname $0)"/best_tbl-to-best_bitscore.py"
+CUR_DIR=$(dirname $0)
 MKDB=$CUR_DIR"/makeblastdb"
 BLASTN=$CUR_DIR"/blastn -task megablast -evalue 1e-4 -dust yes -max_target_seqs 10"
 NRSEQ=$CUR_DIR"/../combine/make-NR_nseq.py"
-
 
 for FA in $(ls *.combined_nTx.fa)
 do
