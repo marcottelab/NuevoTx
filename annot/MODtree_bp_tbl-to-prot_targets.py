@@ -6,9 +6,6 @@ import re
 filename_tbl = sys.argv[1]
 filename_base = re.sub(r'.bp\+\_tbl.gz', '', filename_tbl)
 
-print(filename_tbl, filename_base)
-sys.exit(1)
-
 blastp_Evalue_cutoff = 0.0001
 min_best_targets = 3
 
