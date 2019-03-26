@@ -21,6 +21,11 @@ def open_file(tmp_filename):
     return f
 
 
+rc = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N'}
+def revcomp(tmp_seq):
+    return ''.join([rc[n] for n in tmp_seq])
+
+
 cdna_seq_list = dict()
 prot_seq_list = dict()
 hmmer_list = dict()
@@ -173,7 +178,7 @@ for tmp_h in cdna_seq_list.keys():
 
     count_seq_type[seq_type] += 1
 
-    seq_h = '%s.%08d' % (data_name, seq_idx)
+    seq_h = '%s.%06d' % (data_name, seq_idx)
     seq_idx += 1
     # seq_h = tmp_h
 
@@ -183,6 +188,9 @@ for tmp_h in cdna_seq_list.keys():
     else:
         tmp_prot_h = '%s|%s' % (tmp_h, best_frame)
         tmp_prot_seq = ''.join(prot_seq_list[tmp_prot_h])
+        if best_frame.startswith('r'):
+            tmp_cdna_seq = revcomp(tmp_cdna_seq)
+
         if seq_type == 'coding':
             tmp_best_bits = max(blastp_list[tmp_h][best_frame].values())
             f_prot_coding.write('>p.%s\n%s\n' % (seq_h, tmp_prot_seq))
