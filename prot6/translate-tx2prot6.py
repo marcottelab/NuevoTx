@@ -78,6 +78,7 @@ def revcomp(tmp_nseq):
     return ''.join([rc[x] for x in tmp_nseq.upper()[::-1]])
 
 f_pfa = open('%s_prot6.fa'%filename_fa.replace('.fa',''),'w')
+f_cds = open('%s_prot6cds.fa'%filename_fa.replace('.fa',''),'w')
 
 for tmp_h in sorted(seq_list.keys()):
     tmp_nseq = ''.join(seq_list[tmp_h])
@@ -103,5 +104,18 @@ for tmp_h in sorted(seq_list.keys()):
         if( len(longest_pep) < min_plen ):
             continue
          
+        tmp_p_start = tmp_p.index(longest_pep)
+        tmp_p_end = tmp_p_start + len(longest_pep)
+        
+        tmp_pf_pos = int(tmp_pf[-1])
+        tmp_c_start = tmp_p_start * 3 + tmp_pf_pos
+        tmp_c_end = tmp_p_end * 3 + tmp_pf_pos
+
+        if tmp_pf.startswith('f'):
+            tmp_c_seq = tmp_nseq[tmp_c_start:tmp_c_end+3]
+        elif tmp_pf.startswith('r'):
+            tmp_c_seq = tmp_rc_nseq[tmp_c_start:tmp_c_end+3]
+
         f_pfa.write('>%s|%s\n%s\n'%(tmp_h,tmp_pf,longest_pep))
+        f_cds.write('>%s|%s|%d-%d\n%s\n' % (tmp_h, tmp_pf, tmp_c_start, tmp_c_end, tmp_c_seq))
 f_pfa.close()

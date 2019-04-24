@@ -13,6 +13,24 @@ ref_bits = dict()
 dirname_script = '/home/taejoon/git/NuevoTx/MODtree/'
 filename_ref_bits = dirname_script + '/MODtree.treefam9.201806.gene_name_bits'
 
+
+def read_fasta(tmp_filename):
+    seq_list = dict()
+    seq_h = ''
+    f = open(tmp_filename, 'r')
+    for line in f:
+        if line.startswith('>'):
+            seq_h = line.strip().lstrip('>')
+            seq_list[seq_h] = []
+        else:
+            seq_list[seq_h].append(line.strip())
+    f.close()
+    return seq_list
+
+
+cdna_seq_list = read_fasta(filename_cdna_fa)
+prot_seq_list = read_fasta(filename_prot_fa)
+
 f_ref_bits = open(filename_ref_bits, 'r')
 for line in f_ref_bits:
     tokens = line.strip().split("\t")
@@ -28,12 +46,15 @@ noname_list = dict()
 
 f_list = open(filename_prot_names, 'r')
 for line in f_list:
+    if line.startswith('#'):
+        continue
+
     line = line.strip()
     tokens = line.split("\t")
     q_prot_id = tokens[0]
     q_tx_id = re.sub(r'^p.', 't.', q_prot_id)
-    best_bits = float(tokens[1])
-    tmp_name = tokens[2]
+    tmp_name = tokens[3]
+    best_bits = float(tokens[4])
 
     if tmp_name in ref_bits:
         if best_bits > ref_bits[tmp_name]['min']:
@@ -63,24 +84,8 @@ sys.stderr.write('Full: %d, Partial: %d, Noname: %d = Total: %d\n' %
                  (count_full, count_partial, count_noname, count_total))
 
 
-def read_fasta(tmp_filename):
-    seq_list = dict()
-    seq_h = ''
-    f = open(tmp_filename, 'r')
-    for line in f:
-        if line.startswith('>'):
-            seq_h = line.strip().lstrip('>')
-            seq_list[seq_h] = []
-        else:
-            seq_list[seq_h].append(line.strip())
-    f.close()
-    return seq_list
-
-
-cdna_seq_list = read_fasta(filename_cdna_fa)
-prot_seq_list = read_fasta(filename_prot_fa)
-
 cdna_final = open('%s.cdna_final.fa' % filename_base, 'w')
+cds_final = open('%s.cds_final.fa' % filename_base, 'w')
 prot_final = open('%s.prot_final.fa' % filename_base, 'w')
 
 for tmp_name in full_list.keys():
