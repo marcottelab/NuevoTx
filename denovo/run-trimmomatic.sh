@@ -10,12 +10,12 @@ FA_ADAPTER=$( find $DIR_CONDA | grep -m1 TruSeq3-PE.fa )
 echo "Adapter: "$FA_ADAPTER
 cp $FA_ADAPTER .
 
-pigz -p 4 -d *fastq.gz
+#pigz -p 4 -d *fastq.gz
 
-for FQ1 in $(ls *R1.*fastq)
+for FQ1 in $(ls *R1.raw.fastq.gz)
 do
   FQ2=${FQ1/_R1/_R2}
-  OUT=${FQ1/_R1.raw.fastq}"_trim"
+  OUT=${FQ1/_R1.raw.fastq.gz}"_trim"
   echo $FQ1 $FQ2 $OUT
 
   trimmomatic PE -threads $NUM_THREADS -validatePairs \
