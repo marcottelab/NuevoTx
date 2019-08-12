@@ -3,7 +3,8 @@ import os
 import sys
 
 filename_fa = sys.argv[1]
-filename_part = sys.argv[2]
+#filename_part = sys.argv[2]
+filename_part = filename_fa.replace('.fa', '.self.mb+_tbl_part')
 
 filename_base = filename_fa.split('.')[0]
 
