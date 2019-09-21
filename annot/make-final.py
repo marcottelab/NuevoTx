@@ -4,7 +4,7 @@ import re
 
 filename_prot_names = sys.argv[1]
 
-filename_base = filename_prot_names.split('.')[0]
+filename_base = filename_prot_names.replace('.prot_names', '')
 filename_prot_fa = '%s.prot.fa' % filename_base
 filename_cdna_fa = '%s.cdna.fa' % filename_base
 
