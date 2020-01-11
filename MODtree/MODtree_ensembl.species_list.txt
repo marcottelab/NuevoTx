@@ -1,13 +1,14 @@
-## For sp_code, see http://www.uniprot.org/docs/speclist 
-HUMAN	homo_sapiens
-MOUSE	mus_musculus
-RAT	rattus_norvegicus
-CHICK	gallus_gallus
-ANOCA	anolis_carolinensis
-XENTR	xenopus_tropicalis
-DANRE	danio_rerio
-ORYLA	oryzias_latipes
-LATCH	latimeria_chalumnae
-DROME	drosophila_melanogaster
-CIOIN	ciona_intestinalis
-CAEEL	caenorhabditis_elegans
+ANOCA	anolis_carolinensis	28377
+CAEEL	caenorhabditis_elegans	6239
+CHICK	gallus_gallus	9031
+CIOIN	ciona_intestinalis	7719
+DANRE	danio_rerio	7955
+DROME	drosophila_melanogaster	7227
+HUMAN	homo_sapiens	9606
+LATCH	latimeria_chalumnae	7897
+MOUSE	mus_musculus	10090
+ORYLA	oryzias_latipes	8090
+RAT	rattus_norvegicus	10116
+TETNG	tetraodon_nigroviridis	99883
+XENTR	xenopus_tropicalis	8364
+YEAST	saccharomyces_cerevisiae	4932
