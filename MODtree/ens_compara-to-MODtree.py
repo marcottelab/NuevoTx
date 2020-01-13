@@ -4,7 +4,7 @@ import sys
 
 #SEQ homo_sapiens ENSP00000339726 1 248681369 248682304 -1 ENSG00000189181 OR14I1
 sp_name2code = dict()
-f_species = open('MODtree_ensembl.species_list.txt', 'r')
+f_species = open('MODtree_compara.species_list.txt', 'r')
 for line in f_species:
     tokens = line.strip().split("\t")
     sp_code = tokens[0]
@@ -57,6 +57,9 @@ for line in f_nh:
                 sp_code = prot_info[tmp_p]['sp_code']
                 gene_name = prot_info[tmp_p]['name']
                 tmp_h = '%s|%s|%s|%s' % (mtf_id, sp_code, gene_name, tmp_p)
+                # Refine the gene_name
+                tmp_h = tmp_h.replace("/", "_")
+                tmp_h = tmp_h.replace("'", "_")
                 prot_info[tmp_p]['header'] = tmp_h
                 f_out_txt.write("%s\t%s\t%s\t%s\t%s\n" % (tmp_h, mtf_id, tmp_p, sp_code, gene_name))
         family_id += 1
