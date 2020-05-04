@@ -3,21 +3,22 @@ import os
 import gzip
 import sys
 
-dirname_base = '/home/taejoon/git/NuevoTx/'
-dirname_output      = 'MODtree_ENOG50'
-filename_out_base   = 'MODtree_ENOG50'
+# Run this scrpipt under 33208_Vertebrate folder, mirroring the following site.
+# http://eggnog5.embl.de/download/eggnog_5.0/per_tax_level/33208/
 
-# Run under 33208_Metazoa 
-filename_members    = '33208_members.tsv'
+dirname_curr = os.path.dirname(os.path.realpath(__file__))
+dirname_output = 'MODtree_ENOG50.raw_alg'
+filename_out_base = 'MODtree_ENOG50'
+
+# Run under 33208_Metazoa with following file.
+filename_members = '33208_members.tsv.gz'
+# Directory generated from 33208_raw_algs.tar
 dirname_align = '33208'
-# 3B93J.trimmed_alg.faa.gz
 
 # Make it by grep 'BLAST_UniProt_GN' e5.sequence_aliases.tsv
-filename_GN = os.path.join(dirname_base, 'MODtree',
-                           'MODtree.ENOG50.gene_names.tsv.gz')
+filename_GN = os.path.join(dirname_curr, 'MODtree_ENOG50.gene_names.tsv.gz')
 
-filename_species = os.path.join(dirname_base, 'MODtree',
-                                'MODtree_species.txt')
+filename_species = os.path.join(dirname_curr, 'MODtree_species.txt')
 # UniProt_ID	UP_taxId	EN_taxId	sp_code	sp_name	GOA_name
 # UP000005640	9606	9606	HUMAN	homo_sapiens	25.H_sapiens.goa
 
@@ -34,7 +35,7 @@ f_species.close()
 
 sys.stderr.write('Read gene names...')
 gene_names = dict()
-#9541.XP_005587739.1	RFX2	BLAST_KEGG_NAME BLAST_UniProt_GN RefSeq_gene
+# 9541.XP_005587739.1	RFX2	BLAST_KEGG_NAME BLAST_UniProt_GN RefSeq_gene
 f_GN = gzip.open(filename_GN, 'rt')
 for line in f_GN:
     tokens = line.strip().split("\t")
@@ -54,12 +55,14 @@ f_out_members.write('# %s\t%s\t%s\t%s\t%s\t%s\n' %
 family2seq = dict()
 exclude_family = dict()
 f_members = open(filename_members, 'r')
+if filename_members.endswith('.gz'):
+    f_members = gzip.open(filename_members, 'rt')
 for line in f_members:
     tokens = line.strip().split("\t")
     family_id = tokens[1]
     total_seqs = int(tokens[2])
     total_species = int(tokens[3])
-    
+
     seq_list = []
     sp_code_list = []
     for tmp_id in tokens[4].split(','):
@@ -77,7 +80,7 @@ for line in f_members:
     species_str = ','.join(sp_code_list)
 
     f_out_members.write('%s\t%d\t%d\t%d\t%d\t%s\n' %
-                        (family_id, total_species, total_seqs, 
+                        (family_id, total_species, total_seqs,
                          count_species, count_seqs, species_str))
     if count_seqs > 1:
         family2seq[family_id] = seq_list
@@ -122,16 +125,23 @@ for tmp_family_id in family2seq.keys():
         tmp_name = 'NotAvail'
         if tmp_seq_id in gene_names:
             tmp_name = gene_names[tmp_seq_id]
-        
+
+        # Refine the gene name
+        # because of DANRE name like si:ch211-151m7.6
         tmp_name = tmp_name.replace(':', '_')
         tmp_name = tmp_name.replace(' ', '_')
 
+        # because of CIOIN name like zf(cchc)-22
+        tmp_name = tmp_name.replace('(', '_').replace(')', '_')
+        tmp_name = tmp_name.replace('/', '_')
+
         tmp_id = tmp_seq_id.split('.')[1]
-        tmp_new_h = '%s__%s__%s__%s' % (tmp_name, tmp_sp_code, tmp_family_id, tmp_id)
+        tmp_new_h = '%s|%s|%s|%s' % (tmp_name, tmp_sp_code,
+                                     tmp_family_id, tmp_id)
         tmp_seq = ''.join(tmp_seq_list[tmp_seq_id])
         tmp_new_seq = tmp_seq.replace('-', '')
         if tmp_family_id in exclude_family:
-            tmp_new_h = 'excluded__%s' % tmp_new_h
+            tmp_new_h = '%s|excluded' % tmp_new_h
         f_fa_out.write('>%s\n%s\n' % (tmp_new_h, tmp_seq))
         f_out_combined.write('>%s\n%s\n' % (tmp_new_h, tmp_new_seq))
     f_fa_out.close()
