@@ -23,7 +23,7 @@ def open_file(tmp_filename):
 
 rc = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N'}
 def revcomp(tmp_seq):
-    return ''.join([rc[n] for n in tmp_seq])
+    return ''.join([rc[n] for n in tmp_seq[::-1]])
 
 
 cdna_seq_list = dict()
