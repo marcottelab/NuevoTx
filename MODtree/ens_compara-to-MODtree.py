@@ -3,7 +3,7 @@ import sys
 
 #SEQ homo_sapiens ENSP00000339726 1 248681369 248682304 -1 ENSG00000189181 OR14I1
 sp_name2code = dict()
-f_species = open('MODtree.species_list.txt', 'r')
+f_species = open('MODtree_ensembl.species_list.txt', 'r')
 for line in f_species:
     tokens = line.strip().split("\t")
     sp_code = tokens[0]
