@@ -3,9 +3,9 @@
 NUM_THREADS=4
 
 CUR_DIR=$(dirname $0)
-MKDB=$CUR_DIR"../blast/makeblastdb"
-BLASTN=$CUR_DIR"../blast/blastn -task megablast -evalue 1e-4 -dust yes -max_target_seqs 10"
-NRSEQ=$CUR_DIR"make-NR_nseq.py"
+MKDB=$CUR_DIR"/../blast/makeblastdb"
+BLASTN=$CUR_DIR"/../blast/blastn -task megablast -evalue 1e-4 -dust yes -max_target_seqs 10"
+NRSEQ=$CUR_DIR"/make-NR_nseq.py"
 
 for FA in $(ls *.combined_nTx.fa)
 do
