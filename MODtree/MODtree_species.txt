@@ -1,0 +1,17 @@
+#UniProt_ID	UP_taxId	EN_taxId	sp_code	sp_name	GOA_name
+UP000005640	9606	9606	HUMAN	homo_sapiens	25.H_sapiens.goa
+UP000002494	10116	10116	RAT	rattus_norvegicus	122.R_norvegicus.goa
+UP000000589	10090	10090	MOUSE	mus_musculus	59.M_musculus.goa
+UP000000539	9031	9031	CHICK	gallus_gallus	21457.G_gallus.goa
+UP000001646	28377	28377	ANOCA	anolis_carolinensis	264665.A_carolinensis.goa
+UP000008143	8364	8364	XENTR	xenopus_tropicalis	221256.X_tropicalis.goa
+UP000000437	7955	7955	DANRE	danio_rerio	20721.D_rerio.goa
+UP000001038	8090	8090	ORYLA	oryzias_latipes	31730.O_latipes.go
+UP000007303	99883	99883	TETNI	tetraodon_nigroviridis	271521.T_nigroviridis_1.goa
+UP000008672	7897	7897	LATCH	latimeria_chalumnae	271518.L_chalumnae.goa
+UP000314986	7868	7868	CALMI	callorhinchus_milii	4229144.C_milii.goa
+UP000000803	7227	7227	DROME	drosophila_melanogaster	17.D_melanogaster.goa
+UP000001940	6239	6239	CAEEL	caenorhabditis_elegans	9.C_elegans.goa
+UP000008144	7719	7719	CIOIN	ciona_intestinalis	221259.C_intestinalis.goa
+UP000002311	559292	4932	YEAST	saccharomyces_cerevisiae	71242.S_cerevisiae_ATCC_204508.goa
+UP000186698	8355	8355	XENLA	xenopus_laevis	4099836.X_laevis_African_clawed_frog.goa

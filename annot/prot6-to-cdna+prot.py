@@ -7,11 +7,14 @@ import re
 filename_nTx = sys.argv[1]
 filename_base = re.sub(r'.fa(sta)*(.gz)*$', '', filename_nTx)
 data_name = filename_base.split('_NoPart_nTx')[0]
+data_name = data_name.split('_NoPartQuant_nTx')[0]
+data_name = data_name.replace('_paired', '')
 
 frame_list = ['f0', 'f1', 'f2', 'r0', 'r1', 'r2']
 hmmsearch_Evalue_cutoff = 0.1
 blastp_Evalue_cutoff = 0.0001
 min_best_targets = 3
+rc = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N'}
 
 
 def open_file(tmp_filename):
@@ -21,7 +24,6 @@ def open_file(tmp_filename):
     return f
 
 
-rc = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N'}
 def revcomp(tmp_seq):
     return ''.join([rc[n] for n in tmp_seq[::-1]])
 
@@ -40,7 +42,8 @@ for tmp_filename in os.listdir('.'):
         f = open_file(tmp_filename)
         for line in f:
             if line.startswith('>'):
-                tmp_h = line.strip().lstrip('>')
+                # tmp_h = line.strip().lstrip('>')
+                tmp_h = line.strip().lstrip('>').split()[0]
                 cdna_seq_list[tmp_h] = []
             else:
                 cdna_seq_list[tmp_h].append(line.strip())
@@ -143,8 +146,11 @@ for tmp_h in cdna_seq_list.keys():
     if tmp_h not in blastp_list:
         if tmp_h not in hmmer_list:
             seq_type = 'noncoding'
+
         elif len(hmmer_list[tmp_h]) > 1:
+            # more than one frame have HMMER hits (dubious)
             seq_type = 'noncoding'
+
         else:
             seq_type = 'orphan'
             best_frame = list(hmmer_list[tmp_h].keys())[0]
@@ -197,8 +203,11 @@ for tmp_h in cdna_seq_list.keys():
             f_cdna_coding.write('>t.%s\n%s\n' % (seq_h, tmp_cdna_seq))
             tmp_target_list = \
                 sorted(best_targets.keys(), key=best_targets.get, reverse=True)
-            tmp_target_str = ';'.join(["%s=%.1f" % (x, best_targets[x]) for x in tmp_target_list])
-            f_prot_targets.write('p.%s\t%.1f\t%s\n' % (seq_h, tmp_best_bits, tmp_target_str))
+            tmp_target_str = ';'.join(
+                            ["%s=%.1f" %
+                             (x, best_targets[x]) for x in tmp_target_list])
+            f_prot_targets.write('p.%s\t%.1f\t%s\n' %
+                                 (seq_h, tmp_best_bits, tmp_target_str))
         elif seq_type == 'orphan':
             f_prot_orphan.write('>p.%s\n%s\n' % (seq_h, tmp_prot_seq))
             f_cdna_orphan.write('>t.%s\n%s\n' % (seq_h, tmp_cdna_seq))
