@@ -1,35 +1,43 @@
 #!/usr/bin/env python3
 import os
 import sys
+import gzip
 
-#SEQ homo_sapiens ENSP00000339726 1 248681369 248682304 -1 ENSG00000189181 OR14I1
+dirname_compara = sys.argv[1]
+ens_version = sys.argv[2]
+
+dirname_curr = os.path.dirname(os.path.realpath(__file__))
+filename_spec_list = 'MODtree.species_list.txt'
+filename_spec_list = os.path.join(dirname_curr, filename_spec_list)
+
 sp_name2code = dict()
-f_species = open('MODtree_ensembl.species_list.txt', 'r')
-for line in f_species:
+f_spec_list = open(filename_spec_list, 'r')
+for line in f_spec_list:
     tokens = line.strip().split("\t")
     sp_code = tokens[0]
     sp_name = tokens[1]
     sp_name2code[sp_name] = sp_code
-f_species.close()
+f_spec_list.close()
 
-ens_version = 95
+# from ftp://ftp.ensembl.org/pub/release-100/emf/ensembl-compara/
+filename_fa = 'Compara.%s.protein_default.aa.fasta.gz' % ens_version
+filename_fa = os.path.join(dirname_compara, filename_fa)
+filename_nh = 'Compara.%s.protein_default.nh.emf.gz' % ens_version
+filename_nh = os.path.join(dirname_compara, filename_nh)
 
-# from ftp://ftp.ensembl.org/pub/release-95/emf/ensembl-compara/
-dir_compara = '/home/taejoon/pub/ens/95.compara/'
-filename_fa = 'Compara.%d.protein_default.aa.fasta' % ens_version
-filename_fa = os.path.join(dir_compara, filename_fa)
-filename_nh = 'Compara.%d.protein_default.nh.emf' % ens_version
-filename_nh = os.path.join(dir_compara, filename_nh)
-
-filename_out_txt = 'MODtree_compara_ens%d.raw.txt' % (ens_version)
-filename_out_fa = 'MODtree_compara_ens%d.raw.fa' % (ens_version)
+filename_out_txt = 'MODtree_compara_ens%s.raw.txt' % (ens_version)
+filename_out_fa = 'MODtree_compara_ens%s.raw.fa' % (ens_version)
+filename_out_log = 'MODtree_compara_ens%s.raw.log' % (ens_version)
 
 f_out_txt = open(filename_out_txt, 'w')
+f_out_log = open(filename_out_log, 'w')
+
 family_id = 1
 prot_info = dict()
 tmp_prot_list = []
+
 sys.stderr.write('Read %s\n' % filename_nh)
-f_nh = open(filename_nh, 'r')
+f_nh = gzip.open(filename_nh, 'rt')
 for line in f_nh:
     line = line.strip()
     if line == '':
@@ -44,7 +52,9 @@ for line in f_nh:
             gene_name = 'NotAvail'
         if sp_name in sp_name2code:
             sp_code = sp_name2code[sp_name]
-            prot_info[p_id] = {'name': gene_name, 'sp_name': sp_name, 'sp_code': sp_code}
+            prot_info[p_id] = {'name': gene_name,
+                               'sp_name': sp_name,
+                               'sp_code': sp_code}
             tmp_prot_list.append(p_id)
 
     elif line.startswith('DATA'):
@@ -56,12 +66,18 @@ for line in f_nh:
 
                 sp_code = prot_info[tmp_p]['sp_code']
                 gene_name = prot_info[tmp_p]['name']
+                # Revise troublesome gene name
+                gene_name = gene_name.replace(' ', '_').replace(':', '_')
+                gene_name = gene_name.replace('(', '_').replace(')', '_')
+                gene_name = gene_name.replace('/', '_')
+                gene_name = gene_name.replace("'", "_")
+                if gene_name != prot_info[tmp_p]['name']:
+                    f_out_log.write('GeneName\t%s\t%s\n' %
+                                    (prot_info[tmp_p]['name'], gene_name))
                 tmp_h = '%s|%s|%s|%s' % (mtf_id, sp_code, gene_name, tmp_p)
-                # Refine the gene_name
-                tmp_h = tmp_h.replace("/", "_")
-                tmp_h = tmp_h.replace("'", "_")
                 prot_info[tmp_p]['header'] = tmp_h
-                f_out_txt.write("%s\t%s\t%s\t%s\t%s\n" % (tmp_h, mtf_id, tmp_p, sp_code, gene_name))
+                f_out_txt.write("%s\t%s\t%s\t%s\t%s\n" %
+                                (tmp_h, mtf_id, tmp_p, sp_code, gene_name))
         family_id += 1
 
     elif line.startswith('//'):
@@ -71,11 +87,12 @@ for line in f_nh:
         sys.stderr.write('Error.\n')
 f_nh.close()
 f_out_txt.close()
+f_out_log.close()
 
 is_print = 0
 seq_list = dict()
 sys.stderr.write('Read %s\n' % filename_fa)
-f_fa = open(filename_fa, 'r')
+f_fa = gzip.open(filename_fa, 'rt')
 for line in f_fa:
     if line.startswith('>'):
         seq_h = line.strip().lstrip('>')
@@ -90,8 +107,7 @@ for line in f_fa:
 f_fa.close()
 f_out_fa = open(filename_out_fa, 'w')
 for tmp_h in seq_list.keys():
-    tmp_seq = ''.join(seq_list[tmp_h]).replace('-','').replace('//','').replace('*','')
+    tmp_seq = ''.join(seq_list[tmp_h]).replace('-', '')
+    tmp_seq = tmp_seq.replace('//', '').replace('*', '')
     f_out_fa.write('>%s\n%s\n' % (tmp_h, tmp_seq))
 f_out_fa.close()
-
-#SEQ scophthalmus_maximus ENSSMAP00000020411 9 21811542 21814458 1 ENSSMAG00000012520 NULL
