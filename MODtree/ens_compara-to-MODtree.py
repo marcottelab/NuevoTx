@@ -3,19 +3,27 @@ import os
 import sys
 import gzip
 
+script_name = os.path.basename(__file__)
+usage_mesg = ' Usage: %s <dir of ens_compara file> <ens_version>' % script_name
+if len(sys.argv) != 3:
+    sys.stderr.write("\n" + usage_mesg + "\n\n")
+    sys.exit(1)
+
 dirname_compara = sys.argv[1]
 ens_version = sys.argv[2]
 
 dirname_curr = os.path.dirname(os.path.realpath(__file__))
-filename_spec_list = 'MODtree.species_list.txt'
+filename_spec_list = 'MODtree_species.txt'
 filename_spec_list = os.path.join(dirname_curr, filename_spec_list)
 
 sp_name2code = dict()
 f_spec_list = open(filename_spec_list, 'r')
 for line in f_spec_list:
+    if line.startswith('#'):
+        continue
     tokens = line.strip().split("\t")
-    sp_code = tokens[0]
-    sp_name = tokens[1]
+    sp_code = tokens[3]
+    sp_name = tokens[4]
     sp_name2code[sp_name] = sp_code
 f_spec_list.close()
 
