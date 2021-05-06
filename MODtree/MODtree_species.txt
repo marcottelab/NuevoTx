@@ -15,3 +15,4 @@ UP000001940	6239	6239	CAEEL	caenorhabditis_elegans	9.C_elegans.goa
 UP000008144	7719	7719	CIOIN	ciona_intestinalis	221259.C_intestinalis.goa
 UP000002311	559292	4932	YEAST	saccharomyces_cerevisiae	71242.S_cerevisiae_ATCC_204508.goa
 UP000186698	8355	8355	XENLA	xenopus_laevis	4099836.X_laevis_African_clawed_frog.goa
+UP000245300	7757	7757	PETMA	petromyzon_marinus	265749.P_marinus.goa	
