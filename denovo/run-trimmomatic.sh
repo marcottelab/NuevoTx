@@ -4,9 +4,10 @@
 ## Directory for conda
 
 DIR_CONDA=$HOME/miniconda3
-NUM_THREADS=3
+NUM_THREADS=4
+ADAPTER_TYPE="TruSeq2-PE.fa"
 
-FA_ADAPTER=$( find $DIR_CONDA | grep -m1 TruSeq3-PE.fa )
+FA_ADAPTER=$( find $DIR_CONDA | grep -m1 $ADAPTER_TYPE )
 echo "Adapter: "$FA_ADAPTER
 cp $FA_ADAPTER .
 
@@ -20,6 +21,6 @@ do
 
   trimmomatic PE -threads $NUM_THREADS -validatePairs \
    -summary $OUT".summary" $FQ1 $FQ2 -baseout $OUT \
-   ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+   ILLUMINACLIP:$ADAPTER_TYPE:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
 done
 
