@@ -4,6 +4,7 @@
 ## Directory for conda
 
 DIR_CONDA=$HOME/miniconda3
+
 NUM_THREADS=4
 ADAPTER_TYPE="TruSeq2-PE.fa"
 
