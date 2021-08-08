@@ -4,7 +4,7 @@
 # $ conda install -c bioconda kallisto
 
 NUM_THREADS=8
-DIR_FQ="../fastq.tx/"
+DIR_FQ="../fastq.tx2/"
 
 for FA in $(ls *.fa)
 do
@@ -17,14 +17,14 @@ do
   SAMPLE_NAME=$(echo $FA | awk -F"." '{print $1}')
 
   # for trimmed reads
-  #FQ1=$SAMPLE_NAME"_trim_1P.gz"
-  #FQ1=$DIR_FQ"/"$FQ1
-
-  # for raw reads
-  FQ1=$SAMPLE_NAME"_R1.raw.fastq.gz"
+  FQ1=$SAMPLE_NAME"_trim.fq"
   FQ1=$DIR_FQ"/"$FQ1
 
-  echo "FASTQ:" $FQ1 $FQ2
+  # for raw reads
+  #FQ1=$SAMPLE_NAME"_trim.fq"
+  #FQ1=$DIR_FQ"/"$FQ1
+
+  echo "FASTQ:" $FQ1 
 
   if [ -d $OUT ]; then
     echo "$OUT exists. Skip."
