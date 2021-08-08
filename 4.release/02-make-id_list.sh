@@ -19,7 +19,7 @@ SP_CONF=$CUR_DIR/../"SPECIES.conf"
 SP_CODE=$(grep $SP_NAME $SP_CONF | awk '{print $2}')
 echo "SP: "$SP_NAME, $SP_CODE
 
-if [ ! SP_CODE ]; then
+if [ ! $SP_CODE ]; then
   echo $SP_NAME" is not available. Check SPECIES.conf file. Exit."
   exit
 fi
