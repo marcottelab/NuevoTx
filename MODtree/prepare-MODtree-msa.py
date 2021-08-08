@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 import os
 import sys
+import gzip
 
-filename_input_best = 'XENTR_JGIv90pV2_prot_final.MODtree.treefam9.201806.bp+_tbl_best'
-filename_input_fa = 'XENTR_JGIv90pV2_prot_final.fa'
-dirname_output = './msa.XENTR'
-filename_family_fa = '/home/taejoon/pub/MODtree/201806/MODtree.treefam9.201806.fa.gz'
+filename_family_fa = sys.argv[1]
+dirname_output = sys.argv[2]
 
-f_fa = open(filename_family_fa,'r')
+f_fa = open(filename_family_fa, 'r')
 if filename_family_fa.endswith('.gz'):
-    import gzip
-    f_fa = gzip.open(filename_family_fa,'rt')
+    f_fa = gzip.open(filename_family_fa, 'rt')
 
 family2seq = dict()
 family_seq_list = dict()
@@ -20,44 +18,66 @@ for line in f_fa:
         family_seq_list[seq_h] = ''
 
         tmp_family_id = seq_h.split('|')[0]
-        if not tmp_family_id in family2seq:
+        if tmp_family_id not in family2seq:
             family2seq[tmp_family_id] = []
         family2seq[tmp_family_id].append(seq_h)
     else:
         family_seq_list[seq_h] += line.strip()
 f_fa.close()
 
-input_seq_list = dict()
-f_in_fa = open(filename_input_fa,'r')
-for line in f_in_fa:
-    if line.startswith('>'):
-        seq_h = line.strip().lstrip('>')
-        input_seq_list[seq_h] = []
+for tmp_family_id, tmp_h_list in family2seq.items():
+    dirname_output_sub = os.path.join(dirname_output, tmp_family_id[-1])
+    if not os.access(dirname_output_sub, os.W_OK):
+        os.mkdir(dirname_output_sub)
+
+    dirname_output_gt100 = os.path.join(dirname_output, 'gt100')
+    if not os.access(dirname_output_gt100, os.W_OK):
+        os.mkdir(dirname_output_gt100)
+
+    dirname_output_lt3 = os.path.join(dirname_output, 'lt3')
+    if not os.access(dirname_output_lt3, os.W_OK):
+        os.mkdir(dirname_output_lt3)
+
+    seq2h = dict()
+    for tmp_id in sorted(tmp_h_list):
+        ## Remove family_id from the sequence for display.
+        new_id = tmp_id.replace('%s|' % tmp_family_id, '')
+        tmp_seq = ''.join(family_seq_list[tmp_id]).replace('-', '')
+        if tmp_seq not in seq2h:
+            seq2h[tmp_seq] = []
+        seq2h[tmp_seq].append(new_id)
+    
+    out_list = []
+    for tmp_seq, tmp_h_list in seq2h.items():
+        if len(tmp_h_list) == 1:
+            out_list.append('>%s\n%s' % (tmp_h_list[0], tmp_seq))
+        else:
+            gencode_h_list = [x for x in tmp_h_list if x.endswith('-GENCODE')]
+            if len(gencode_h_list) == 1:
+                out_list.append('>%s\n%s' % (gencode_h_list[0], tmp_seq))
+                for tmp_h in tmp_h_list:
+                    if tmp_h == gencode_h_list[0]:
+                        continue
+                    sys.stderr.write('Replace %s --> %s (identical)\n' % (tmp_h, gencode_h_list[0]))
+            else:
+                out_list.append('>%s\n%s' % (tmp_h_list[0], tmp_seq))
+                for tmp_h in tmp_h_list:
+                    if tmp_h == tmp_h_list[0]:
+                        continue
+                    sys.stderr.write('Replace %s --> %s (identical)\n' % (tmp_h, tmp_h_list[0]))
+
+    
+    if len(out_list) > 100 * 2:
+        filename_output = os.path.join(dirname_output_gt100,
+                                       '%s.msa_in.fa' % tmp_family_id)
+    elif len(out_list) < 3 * 2:
+        filename_output = os.path.join(dirname_output_lt3,
+                                       '%s.msa_in.fa' % tmp_family_id)
     else:
-        input_seq_list[seq_h].append( line.strip() )
-f_in_fa.close()
+        filename_output = os.path.join(dirname_output_sub,
+                                       '%s.msa_in.fa' % tmp_family_id)
 
-#Qid	QLen	Tid	TLen	AlignLen	Mismatches	GapOpens	BitScore	Evalue
-#42Sp43|Xetrov90024704m	366	TF333011|XENTR|42Sp43|ENSXETP00000059706	365	365	9	0	691.0	0.00e+00
-
-family2input = dict()
-f_best = open(filename_input_best,'r')
-f_best.readline()
-for line in f_best:
-    tokens = line.strip().split("\t")
-    family_id = tokens[2].split('|')[0]
-    if not family_id in family2input:
-        family2input[family_id] = []
-    family2input[family_id].append(tokens[0])
-f_best.close()
-
-for tmp_family_id in family2input.keys():
-    filename_output = os.path.join(dirname_output,'%s.msa_in.fa'%tmp_family_id)
-    sys.stderr.write('Write %s\n'%filename_output)
-    f_out = open(filename_output,'w')
-    for tmp_id in family2input[tmp_family_id]:
-        f_out.write('>%s\n%s\n'%(tmp_id, ''.join(input_seq_list[tmp_id])))
-
-    for tmp_id in family2seq[tmp_family_id]:
-        f_out.write('>%s\n%s\n'%(tmp_id, ''.join(family_seq_list[tmp_id])))
+    sys.stderr.write('Write %s\n' % filename_output)
+    f_out = open(filename_output, 'w')
+    f_out.write('\n'.join(out_list) + "\n")
     f_out.close()

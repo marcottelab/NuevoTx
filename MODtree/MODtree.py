@@ -7,7 +7,7 @@ import gzip
 filename_sp_list = 'MODtree.species_list.txt'
 
 # TreeFam version 9 --> EnsEMBL version 69
-filename_names = 'ens69.prot2name.gz'
+# filename_names = 'ens69.prot2name.gz'
 
 dirname_curr = os.path.dirname(os.path.realpath(__file__))
 
