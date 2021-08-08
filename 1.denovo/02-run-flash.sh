@@ -3,7 +3,9 @@
 NUM_THREADS=4
 MAX_OVERLAP=90
 
-for R1 in $(ls *_trim_1P.gz)
+SAMPLE=$!
+
+for R1 in $(ls *$SAMPLE*_trim_1P.gz)
 do
   R2=${R1/_1P/_2P}
   OUT_NAME=${R1/_trim_1P.gz/}

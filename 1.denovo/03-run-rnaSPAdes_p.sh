@@ -8,7 +8,7 @@
 # Ref. http://cab.spbu.ru/software/spades/
 
 NUM_THREADS=8
-DIR_FQ="../fastq/"
+DIR_FQ="../fastq.tx2/"
 
 # Run trim+flash first.
 for FQ_e in $(ls $DIR_FQ/*.extendedFrags.fastq)
