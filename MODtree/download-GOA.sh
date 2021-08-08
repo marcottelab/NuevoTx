@@ -1,3 +1,4 @@
+#!/bin/bash
 curl -O ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/proteomes/4099836.X_laevis_African_clawed_frog.goa
 curl -O ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/proteomes/353236.A_mexicanus.goa
 curl -O ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/proteomes/221256.X_tropicalis.goa

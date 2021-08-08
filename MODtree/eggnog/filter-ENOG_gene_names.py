@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 import gzip
 import sys
 
@@ -28,7 +27,7 @@ f_species.close()
 f_out = open(filename_out, 'w')
 
 sys.stderr.write('Read gene names...')
-#9541.XP_005587739.1	RFX2	BLAST_KEGG_NAME BLAST_UniProt_GN RefSeq_gene
+# 9541.XP_005587739.1	RFX2	BLAST_KEGG_NAME BLAST_UniProt_GN RefSeq_gene
 f_GN = gzip.open(filename_in, 'rt')
 for line in f_GN:
     tokens = line.strip().split("\t")
